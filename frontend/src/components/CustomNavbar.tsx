@@ -24,9 +24,6 @@ const CustomNavbar: React.FC<CustomNavbarProps> = ({ setNavbarExpanded }) => {
     setUsername("");
     navigate("/");
   };
-  const [isLogged, setIsLogged] = useAtom(isLoggedAtom);
-  const [, setisRegistered] = useAtom(isRegisteredAtom);
-
 
   const navigate = useNavigate();
   const location = useLocation();

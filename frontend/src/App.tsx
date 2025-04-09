@@ -11,11 +11,9 @@ import Trade from "./pages/Trade";
 import Search from "./pages/Search";
 import Cards from "./pages/Cards";
 import Messages from "./pages/Messages";
-
 import Profile from "./pages/Profile";
 import LoginRewards from "./pages/LoginRewards";
 import ForgotPassword from "./pages/ForgotPassword";
- 
 
 import CustomNavbar from "./components/CustomNavbar";
 import Footer from "./components/Footer";
@@ -27,7 +25,6 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
-
       <CustomNavbar setNavbarExpanded={setNavbarExpanded} />
       <div className={`content ${navbarExpanded ? "navbar-expanded" : ""}`}>
         <Routes>
@@ -41,8 +38,6 @@ const App: React.FC = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/cards" element={<Cards />} />
           <Route path="/messages" element={<Messages />} />
-
-
           <Route path="/profile" element={<Profile />} />
           <Route path="/loginrewards" element={<LoginRewards />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
