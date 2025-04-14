@@ -17,7 +17,7 @@ const LoginRewards: React.FC = () => {
   const [earned, setEarned] = useState(0);
   useEffect(() => {
     if (userId) {
-      fetch(`http://localhost:8000/user/${userId}`)
+      fetch(`${import.meta.env.VITE_API_URL}/user/${userId}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
