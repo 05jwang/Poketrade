@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 
@@ -29,7 +29,12 @@ SECRET_KEY = 'django-insecure-ext28=lp@wnw582@4+3f1*a4lk!!o(uzv+9rx9m&z$38u(wk6g
 DEBUG = True
 
 ALLOWED_HOSTS = []
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'build/static'),  # React static files
+]
 
+# Set STATIC_ROOT (for collectstatic)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Application definition
 

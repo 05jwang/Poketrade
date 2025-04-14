@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, reverse_lazy
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 from rest_framework.routers import DefaultRouter
 from accounts.views import *
 
@@ -21,4 +21,5 @@ urlpatterns = [
     path('api/packs/<slug:pack_id>/', PackView.as_view(), name='pack-detail'),
     path('search/', card_views.search, name='search'),
     path('api/', include('pokemessages.urls')),
+    path('', TemplateView.as_view(template_name='index.html')),
 ]
