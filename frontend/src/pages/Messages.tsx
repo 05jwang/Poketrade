@@ -25,7 +25,7 @@ const Messages: React.FC = () => {
   const [inboxMessages, setInboxMessages] = useState<Message[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
-  const [sentMessages, setSentMessages] = useState<Message[]>([]);
+  const [sentMessages,] = useState<Message[]>([]);
   const [selectedSentMessage, setSelectedSentMessage] = useState<Message | null>(null);
 
   const [composeValidated, setComposeValidated] = useState(false);
