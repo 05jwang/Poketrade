@@ -7,6 +7,7 @@ import LoginPrompt from "./LoginPrompt";
 import { useNavigate } from "react-router-dom";
 import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
+import { Alert } from "react-bootstrap";
 
 
 
@@ -33,6 +34,8 @@ const Marketplace = () => {
   const [bidAmount, setBidAmount] = useState("");
   const [bidError, setBidError] = useState("");
   const [userCoins, setUserCoins] = useState(1500);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertVariant, setAlertVariant] = useState< 'danger' | 'success' | 'warning' | 'info'>('danger'); 
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
   useEffect(() => {
@@ -126,6 +129,11 @@ const Marketplace = () => {
   };
 
   const buyItem = async(item: MarketplaceItem) => {
+      if (item.seller === userId) {
+        setAlertMessage("You cannot buy your own card.");
+        setAlertVariant('warning');
+        return;
+      }
       try {
         console.log('Buying item.')
         console.log(`${import.meta.env.VITE_API_URL}`);
@@ -138,11 +146,12 @@ const Marketplace = () => {
         });
 
         if (!response.ok) {
-            console.error("Failed to Buy Item - Error ");
+            setAlertMessage("Failed to Buy Item - Error ");
             console.log("Buyer: ", userId);
             console.error("Item Payload:", JSON.stringify(item));
         } else {
             console.log("Bought item successfully");
+            setAlertMessage(null);
         }
     } catch (error) {
         console.error("Error buying item:", error);
@@ -246,7 +255,17 @@ const Marketplace = () => {
           </div>
 
           <p style={{ textAlign: "center", color: "#DADADA" }}>Buy and sell items here!</p>
-
+          <div className="flex justify-center mt-3 mb-3">
+            {alertMessage && (
+                <Alert
+                    variant={alertVariant}
+                    onClose={() => setAlertMessage(null)}
+                    dismissible
+                >
+                    {alertMessage}
+                </Alert>
+            )}
+          </div>
           <div className="container">
             <div className="marketplace-container">
               {filteredItems.map((item) => (
