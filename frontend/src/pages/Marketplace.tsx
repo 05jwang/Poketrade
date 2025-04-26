@@ -3,7 +3,7 @@ import "./Marketplace.css";
 import userIdAtom from "../atoms/userIdAtom";
 import { useAtomValue } from "jotai";
 import Card from "../types/Card";
-import LoginPrompt from "./LoginPrompt";
+// import LoginPrompt from "./LoginPrompt";
 import { useNavigate } from "react-router-dom";
 import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
@@ -19,13 +19,16 @@ interface MarketplaceItem {
 }
 
 const Marketplace = () => {
-  const [overlayIsVisible, setOverlayVisibility] = useState<number | null>(null);
+  // setOverlayVisibility was here:
+  const [overlayIsVisible,] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [marketplaceItems, setMarketplaceItems] = useState<MarketplaceItem[]>([]);
   const [filteredItems, setFilteredItems] = useState<MarketplaceItem[]>([]);
   const [minPriceHP, setMinPriceHP] = useState(0);
-  const [maxPriceHP, setMaxPriceHP] = useState(1000);
-  const [minPriceAuction, setMinPriceAuction] = useState(0);
+  // setMaxPriceHP was here:
+  const [maxPriceHP,] = useState(1000);
+  // setMinPriceAuction was here:
+  const [minPriceAuction,] = useState(0);
   const [maxPriceAuction, setMaxPriceAuction] = useState(1000);
   const [selectedRarities, setSelectedRarities] = useState<string[]>([]);
   const userId = useAtomValue(userIdAtom);
@@ -42,10 +45,10 @@ const Marketplace = () => {
   }, []);
 
   const handleCardClick = (itemId: number) => {
+    console.log("itemID: " + itemId);
     setBidAmount("");
     setBidError("");
   };
-
   const handleCloseOverlay = () => {
     // ayVisibility(null);setOverl
     setBidAmount("");
@@ -61,7 +64,7 @@ const Marketplace = () => {
   };
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/marketplace/`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/marketplace/`)
       .then((response) => response.json())
       .then((data: MarketplaceItem[]) => {
         setMarketplaceItems(data);
@@ -75,9 +78,15 @@ const Marketplace = () => {
     const filtered = marketplaceItems.filter((item) => {
       const card = item.card;
       const matchesName = card.name.toLowerCase().startsWith(searchQuery.toLowerCase().trim());
+      // const matchesRarity =
+      //   selectedRarities.length === 0 ||
+      //   (card.rarity && selectedRarities.some((selectedRarity) => card.rarity.startsWith(selectedRarity)));
+      
+      // was getting an error for card.rarity so replaced with:
+      // needed a ! to make sure card.rarity exists 
       const matchesRarity =
-        selectedRarities.length === 0 ||
-        (card.rarity && selectedRarities.some((selectedRarity) => card.rarity.startsWith(selectedRarity)));
+          selectedRarities.length === 0 ||
+          (card.rarity && selectedRarities.some((selectedRarity) => card.rarity!.startsWith(selectedRarity))); // Non-null assertion if you're sure it exists
       const hp = parseInt(card.hp || "0", 10);
       const matchesHP = hp >= minPriceHP; // Ensure we are filtering for HP greater than or equal to the minimum
       const auctionPrice = parseFloat(item.auction_price);
@@ -117,14 +126,15 @@ const Marketplace = () => {
     setUserCoins((prevCoins) => prevCoins - bid);
     handleCloseOverlay();
   };
-  const [auctionPriceRange, setAuctionPriceRange] = useState<number[]>([0, 100]); // State for the range
+  // auctionPriceRange was here
+  const [, setAuctionPriceRange] = useState<number[]>([0, 100]); // State for the range
 
   const handleAuctionPriceChange = (values: number[]) => {
     setAuctionPriceRange(values);
     console.log('Auction Price Range:', values);
     // You would also update your filtering logic here
   };
-
+  console.log("handle auction price change: " + handleAuctionPriceChange);
   const buyItem = async(item: MarketplaceItem) => {
       try {
         console.log('Buying item.')

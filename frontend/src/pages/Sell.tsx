@@ -5,10 +5,14 @@ import userIdAtom from "../atoms/userIdAtom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Card as PokemonCard } from "../types/Card";
+// it was giving an error for Card as PokemonCard so I imported Card regularly and tweaked the OwnedCards constructor
+// import { Card as PokemonCard } from "../types/Card";
+import Card from "../types/Card";
+
 
 type OwnedCards = {
-  card_details: PokemonCard;
+  // changes from PokemonCard to Card
+  card_details: Card;
   quantity: number;
   id: number;
 }
@@ -53,7 +57,10 @@ const Sell: React.FC = () => {
 
   const [ownedCards, setOwnedCards] = useState<OwnedCards[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  // const [selectedCardId, setSelectedCardId] = useState<string>("");
+
   const [auctionPrice, setAuctionPrice] = useState<string>("");
   const [buyNowPrice, setBuyNowPrice] = useState<string>("");
   const [sellMessage, setSellMessage] = useState<string | null>(null);
@@ -181,7 +188,9 @@ const Sell: React.FC = () => {
                 type="button"
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
                 onClick={handleSell}
-                disabled={sellingCardIds.has(selectedCardId) || listedCardIds.has(selectedCardId) || !selectedCardId}
+                // it was giving errors because it needs to check if selectedCardId is null first, so I switched it:
+                disabled={!selectedCardId || sellingCardIds.has(selectedCardId) || listedCardIds.has(selectedCardId)}
+                // disabled={sellingCardIds.has(selectedCardId) || listedCardIds.has(selectedCardId) || !selectedCardId}
               >
                 Sell
               </button>
