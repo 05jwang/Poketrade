@@ -5,13 +5,16 @@ import userIdAtom from "../atoms/userIdAtom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Card as PokemonCard } from "../types/Card";
+// it was giving an error for Card as PokemonCard so I imported Card regularly and tweaked the OwnedCards constructor
+// import { Card as PokemonCard } from "../types/Card";
+import Card from "../types/Card";
+
 
 type OwnedCards = {
-  card_details: PokemonCard;
+  // changes from PokemonCard to Card
+  card_details: Card;
   quantity: number;
   id: number;
-  is_selling: boolean;
 }
 
 const Sell: React.FC = () => {
@@ -54,14 +57,16 @@ const Sell: React.FC = () => {
 
   const [ownedCards, setOwnedCards] = useState<OwnedCards[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-  const [selectedSell, setSelected] = useState<string | null>(null);
+  // const [selectedCardId, setSelectedCardId] = useState<string>("");
+
   const [auctionPrice, setAuctionPrice] = useState<string>("");
   const [buyNowPrice, setBuyNowPrice] = useState<string>("");
   const [sellMessage, setSellMessage] = useState<string | null>(null);
   const userId = useAtomValue(userIdAtom);
   const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const [sellingCardIds, setSellingCardIds] = useState<Set<string>>(new Set());
+  const [sellingCardIds, setSellingCardIds] = useState<Set<string>>(new Set()); 
   const [listedCardIds, setListedCardIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -88,7 +93,6 @@ const Sell: React.FC = () => {
     setSelectedImage(imageUrl);
     setSelectedCardId(cardId);
     setSellMessage(null);
-
   };
 
   const handleSell = () => {
@@ -156,7 +160,6 @@ const Sell: React.FC = () => {
       });
   };
 
-
   return (
     <>
       <h1>Sell</h1>
@@ -183,32 +186,32 @@ const Sell: React.FC = () => {
             <div>
               <button
                 type="button"
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700"
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
                 onClick={handleSell}
+                // it was giving errors because it needs to check if selectedCardId is null first, so I switched it:
+                disabled={!selectedCardId || sellingCardIds.has(selectedCardId) || listedCardIds.has(selectedCardId)}
+                // disabled={sellingCardIds.has(selectedCardId) || listedCardIds.has(selectedCardId) || !selectedCardId}
               >
                 Sell
               </button>
             </div>
           </div>
         </div>
-        <Slider {...settings} className="slider">
-        {ownedCards.filter(card => {
-          console.log(card.is_selling);
-          return card.is_selling;
-        }).map((ownedCard) => (
-          <div key={ownedCard.id}>
-            <img
-              src={ownedCard.card_details.image_url}
-              alt={ownedCard.card_details.name}
-              className="card-img"
-              onClick={() => handleImageClick(ownedCard.card_details.image_url, ownedCard.card_details.id)}
-            />
-          </div>
-        ))}
 
+        <Slider {...settings} className="slider">
+          {ownedCards.map((ownedCard) => (
+            <div key={ownedCard.id}>
+              <img
+                src={ownedCard.card_details.image_url}
+                alt={ownedCard.card_details.name}
+                className="card-img"
+                onClick={() => handleImageClick(ownedCard.card_details.image_url, ownedCard.card_details.id)}
+                
+              />
+            </div>
+          ))}
         </Slider>
       </div>
-        
     </>
   );
 };
